@@ -46,8 +46,10 @@ class App extends React.Component {
 
     }
 
-    handleClick(itemPosition) {
-        alert(this.state.musicData[itemPosition - 1].title);
+    handleClick(itemId) {
+        
+        const data = this.state.musicData.find(element => element.id === itemId);
+        alert('Position: ' + (data.position) + '\n Title: ' + (data.title) + '\n Artist: ' + data.artist.name + '\n Duration: ' + data.duration);
     }
 
     render() {
@@ -56,9 +58,9 @@ class App extends React.Component {
         const displayList = dataToDisplay.map(item => 
             <li 
                 key={item.id}
-                onClick={() => { this.handleClick(item.position) }}
+                onClick={() => { this.handleClick(item.id) }}
             > 
-            {item.title} <span style={{fontSize: 0.75 + 'rem'}}>by</span> {item.artist.name}
+            {item.title} <span style={{fontSize: 0.75 + 'rem'}}>by</span> {item.artist.name} - {item.duration}
             </li>
         );
 
