@@ -1,4 +1,6 @@
 import React from 'react';
+import SongDetails from './SongDetails';
+import './Modal.css';
 
 
 class App extends React.Component {
@@ -7,30 +9,49 @@ class App extends React.Component {
         super(props);
         this.state = {
             musicData: [],
-            sortOption: 'duration asc.'
+            sortOption: '',
+            show: false,
+            data: {},
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.hideModal = this.hideModal.bind(this);
     }
 
     handleChange(event) {
-        this.setState({
-            sortOption: event.target.value,
-        });
+        console.log('On change', event.target.value);
 
-        if(this.state.sortOption === 'duration asc.') {
-            this.setState({
-                musicData: this.state.musicData.sort((a, b) => {
-                    return a.duration - b.duration;
-                }),
+        let {musicData} = this.state;
+        const sortOption = event.target.value;
+
+        if (sortOption === 'duration asc.') {
+            musicData.sort((a, b) => {
+                return a.duration - b.duration;
+            });
+        } else if (sortOption === 'duration desc.') {
+            musicData.sort((a, b) => {
+                return b.duration - a.duration;
+            });
+        } else if (sortOption === 'position asc.') {
+            console.log('Inside position sort');
+            musicData.sort((a, b) => {
+                return a.position - b.position;
             });
         } else {
-            this.setState({
-                musicData: this.state.musicData.sort((a, b) => {
-                    return b.duration - a.duration;
-                }),
-            });
+            // do nothing.
         }
+
+        // ovo je jednako sljedecem:
+        this.setState({
+            sortOption,
+            musicData
+        });
+        // jednako ka i ovo gore
+        // this.setState({
+        //     sortOption: sortOption,
+        //     musicData: musicData
+        // });
+        // al npr da sam varijablu nazva drugacije, onda nebi moga ovako skraceno nego bi mora ovako ka sta je donji primjer.
     }
 
     componentDidMount() {
@@ -48,8 +69,26 @@ class App extends React.Component {
 
     handleClick(itemId) {
         
-        const data = this.state.musicData.find(element => element.id === itemId);
-        alert('Position: ' + (data.position) + '\n Title: ' + (data.title) + '\n Artist: ' + data.artist.name + '\n Duration: ' + data.duration);
+        const dataForModal = this.state.musicData.find(element => element.id === itemId);
+
+        const data = {
+            position: dataForModal.position,
+            title: dataForModal.title,
+            artistName: dataForModal.artist.name,
+            duration: dataForModal.duration
+        };
+        const show = true;
+
+        this.setState({
+            show,
+            data
+        });
+    }
+
+    hideModal() {
+        this.setState({
+            show: false,
+        });
     }
 
     render() {
@@ -57,6 +96,7 @@ class App extends React.Component {
 
         const displayList = dataToDisplay.map(item => 
             <li 
+                title="Click to see more details."
                 key={item.id}
                 onClick={() => { this.handleClick(item.id) }}
             > 
@@ -66,13 +106,17 @@ class App extends React.Component {
 
         return (
             <div>
-                <label htmlFor="filters">Order by:</label>
-                <select name="filters" value={this.state.sortOption} onChange={this.handleChange}>
-                    <option value="duration asc.">duration asc.</option>
-                    <option value="duration desc.">duration desc.</option>
-                </select>
+                <form id="form">
+                    <label htmlFor="filters">Order by:</label>
+                    <select name="filters" value={this.state.sortOption} onChange={this.handleChange}>
+                        <option value="">Please select...</option>
+                        <option value="duration asc.">duration asc.</option>
+                        <option value="duration desc.">duration desc.</option>
+                        <option value="position asc.">position asc.</option>
+                    </select>
+                </form>
                 <ul>{displayList}</ul>
-                <div id="modal"></div>
+                <SongDetails handleClose={this.hideModal} show={this.state.show} data={this.state.data}/>
             </div>
         );
     }
