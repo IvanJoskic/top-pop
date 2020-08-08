@@ -106,6 +106,9 @@ class App extends React.Component {
 
         return (
             <div>
+                <h1>Most Popular Songs</h1>
+                <p>On Deezer</p>
+                <hr />
                 <form id="form">
                     <label htmlFor="filters">Order by:</label>
                     <select name="filters" value={this.state.sortOption} onChange={this.handleChange}>
