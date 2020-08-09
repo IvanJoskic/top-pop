@@ -22,8 +22,6 @@ class SongDetails extends React.Component {
 
         const showHideClassName = show ? 'show-modal' : 'hide-modal';
 
-        
-
         return (
             <div className={showHideClassName}>
                 <div id="myModal" className="modal" onClick={this.handleBackgroundClose}>
