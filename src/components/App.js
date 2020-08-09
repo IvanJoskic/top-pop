@@ -1,7 +1,7 @@
 import React from 'react';
 import SongDetails from './SongDetails';
 import './Modal.css';
-
+import './Loading.css';
 
 class App extends React.Component {
 
@@ -12,6 +12,7 @@ class App extends React.Component {
             sortOption: '',
             show: false,
             data: {},
+            loading: 'show-loading',
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -41,17 +42,10 @@ class App extends React.Component {
             // do nothing.
         }
 
-        // ovo je jednako sljedecem:
         this.setState({
             sortOption,
             musicData
         });
-        // jednako ka i ovo gore
-        // this.setState({
-        //     sortOption: sortOption,
-        //     musicData: musicData
-        // });
-        // al npr da sam varijablu nazva drugacije, onda nebi moga ovako skraceno nego bi mora ovako ka sta je donji primjer.
     }
 
     componentDidMount() {
@@ -59,9 +53,11 @@ class App extends React.Component {
         .then(response => response.json())
         .then(response => {
             this.setState({
-                musicData: response.tracks.data
+                musicData: response.tracks.data,
+                loading: 'hide-loading',
             });
             console.log(response.tracks.data);
+
         })
         .catch(err => {console.log(err)});
 
@@ -85,7 +81,7 @@ class App extends React.Component {
         });
     }
 
-    hideModal() {
+    hideModal(event) {
         this.setState({
             show: false,
         });
@@ -100,26 +96,34 @@ class App extends React.Component {
                 key={item.id}
                 onClick={() => { this.handleClick(item.id) }}
             > 
-            {item.title} <span style={{fontSize: 0.75 + 'rem'}}>by</span> {item.artist.name} - {item.duration}
+            {item.title} <span style={{fontSize: 0.75 + 'rem'}}>by</span> {item.artist.name}
             </li>
         );
 
+        const ShowLoading = (props) => (<div className={props.loading}><div className="loading-center lds-dual-ring"></div></div>);
+
         return (
-            <div>
-                <h1>Most Popular Songs</h1>
-                <p>On Deezer</p>
-                <hr />
-                <form id="form">
-                    <label htmlFor="filters">Order by:</label>
-                    <select name="filters" value={this.state.sortOption} onChange={this.handleChange}>
-                        <option value="">Please select...</option>
-                        <option value="duration asc.">duration asc.</option>
-                        <option value="duration desc.">duration desc.</option>
-                        <option value="position asc.">position asc.</option>
-                    </select>
-                </form>
-                <ul>{displayList}</ul>
-                <SongDetails handleClose={this.hideModal} show={this.state.show} data={this.state.data}/>
+            <div className="ui container">
+                <h1 className="header title-font">Most Popular Songs</h1>
+                <div className="main-content">
+                    <span className="subtitle-font">As determined by Deezer users</span>
+                    <div className="ui divider"></div>
+                    <div className="nav">
+                        <span>Showing Top 10</span>
+                        <div className="float-right">
+                            <label htmlFor="filters">Order by: </label>
+                            <select name="filters" value={this.state.sortOption} onChange={this.handleChange}>
+                                <option value="">Please select...</option>
+                                <option value="duration asc.">duration asc.</option>
+                                <option value="duration desc.">duration desc.</option>
+                                <option value="position asc.">position asc.</option>
+                            </select>
+                        </div>
+                    </div>
+                    <ShowLoading loading={this.state.loading}/>
+                    <ol className="list">{displayList}</ol>
+                    <SongDetails handleClose={this.hideModal} show={this.state.show} data={this.state.data}/>
+                </div>
             </div>
         );
     }
