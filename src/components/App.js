@@ -103,7 +103,7 @@ class App extends React.Component {
         const ShowLoading = (props) => (<div className={props.loading}><div className="loading-center lds-dual-ring"></div></div>);
 
         return (
-            <div className="ui container">
+            <div className="my-container">
                 <h1 className="header title-font">Most Popular Songs</h1>
                 <div className="main-content">
                     <span className="subtitle-font">As determined by Deezer users</span>

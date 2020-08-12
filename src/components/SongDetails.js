@@ -19,7 +19,6 @@ class SongDetails extends React.Component {
     render() {
 
         const { handleClose, show, data } = this.props;
-
         const showHideClassName = show ? 'show-modal' : 'hide-modal';
 
         return (

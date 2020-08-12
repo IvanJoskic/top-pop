@@ -1,7 +1,7 @@
 .lds-dual-ring {
-    width: 80px;
-    height: 80px;
-  }
+  width: 80px;
+  height: 80px;
+}
 
 .lds-dual-ring:after {
   content: " ";
@@ -25,14 +25,14 @@
 }
 
 .hide-loading {
-    display: none;
+  display: none;
 }
 
 .show-loading {
-    display: block;
+  display: block;
 }
 
 .loading-center {
-    margin: auto;
+  margin: auto;
 }
   
